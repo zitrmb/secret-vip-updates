@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "plugins": {
+    "SVPEQ4": {
+      "name": "Secret Future EQ 2",
+      "version": "8.5.0",
+      "url": "https://secret.vip",
+      "critical": false,
+      "notes": ""
+    },
+    "SecretParametricEQ": {
+      "name": "Secret Parametric EQ",
+      "version": "1.0.0",
+      "url": "https://secret.vip",
+      "critical": false,
+      "notes": ""
+    }
+  }
+}
