@@ -3,8 +3,8 @@
   "plugins": {
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
-      "version": "8.5.0",
-      "url": "https://secret.vip",
+      "version": "2.0.0",
+      "url": "https://plugins.secret.vip/download/",
       "critical": false,
       "notes": ""
     },
