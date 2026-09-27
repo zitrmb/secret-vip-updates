@@ -16,8 +16,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release download sfe2-2.0.1 -R zitrmb/secret-vip-updates \
-            -p 'Secret-Future-EQ-2-2.0.1-Mac.pkg' -p SHA256SUMS
+          if ! gh release download sfe2-2.0.1 -R zitrmb/secret-vip-updates \
+            -p 'Secret-Future-EQ-2-2.0.1-Mac.pkg' -p SHA256SUMS; then
+            gh api repos/zitrmb/secret-vip-updates/releases/397687742 --jq '.draft'
+            gh api -H 'Accept: application/octet-stream' repos/zitrmb/secret-vip-updates/releases/assets/593339280 > Secret-Future-EQ-2-2.0.1-Mac.pkg
+            gh api -H 'Accept: application/octet-stream' repos/zitrmb/secret-vip-updates/releases/assets/593339279 > SHA256SUMS
+          fi
           grep 'Secret-Future-EQ-2-2.0.1-Mac.pkg' SHA256SUMS | shasum -a 256 -c - | tee pkg-sha.log
       - name: Install draft package and validate registered AU
         run: |
