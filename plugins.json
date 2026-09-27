@@ -3,10 +3,10 @@
   "plugins": {
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
-      "version": "2.0.1",
+      "version": "2.0.0",
       "url": "https://plugins.secret.vip/download/",
       "critical": false,
-      "notes": "New: Feedback button to report a bug or request a feature. Fixed: Audio Unit now reports version 2.0.1."
+      "notes": ""
     },
     "SecretParametricEQ": {
       "name": "Secret Parametric EQ",
