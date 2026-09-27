@@ -1,0 +1,44 @@
+name: AU validation probe
+on:
+  push:
+    branches: [probe/auval-8ce2]
+
+permissions:
+  contents: read
+
+jobs:
+  auval:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download and verify draft package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download sfe2-2.0.1 -R zitrmb/secret-vip-updates \
+            -p 'Secret-Future-EQ-2-2.0.1-Mac.pkg' -p SHA256SUMS
+          grep 'Secret-Future-EQ-2-2.0.1-Mac.pkg' SHA256SUMS | shasum -a 256 -c - | tee pkg-sha.log
+      - name: Install draft package and validate registered AU
+        run: |
+          set -uo pipefail
+          installer -pkg Secret-Future-EQ-2-2.0.1-Mac.pkg -target / > installer.log 2>&1
+          install_rc=$?
+          cat installer.log
+          if [ "$install_rc" -ne 0 ]; then
+            printf 'installer_exit=%s\n' "$install_rc" > auval.log
+            exit "$install_rc"
+          fi
+          auval -v aufx SFE2 SVIP > auval.log 2>&1
+          auval_rc=$?
+          cat auval.log
+          exit "$auval_rc"
+      - name: Save validation logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: auval-probe
+          path: |
+            pkg-sha.log
+            installer.log
+            auval.log
