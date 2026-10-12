@@ -14,6 +14,20 @@
       "url": "https://secret.vip",
       "critical": false,
       "notes": ""
+    },
+    "SecretDynamicsBeta": {
+      "name": "Secret Dynamics Beta",
+      "version": "0.4.3",
+      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-secret-dynamics-0.4.3/Secret-Dynamics-Beta-0.4.3.pkg",
+      "critical": true,
+      "notes": "Fixes typing in the bug / wish window and clicks that went through to a plugin behind it. Update notice now shows on open. Install, then restart your DAW."
+    },
+    "SecretAnalyserBeta": {
+      "name": "Secret Analyser Beta",
+      "version": "1.3.1",
+      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-secret-analyser-1.3.1/Secret-Analyser-Beta-1.3.1.pkg",
+      "critical": false,
+      "notes": "Fixes typing in the bug / wish window and clicks that went through to a plugin behind it. Update notice now shows on open. Install, then restart your DAW."
     }
   }
 }
