@@ -4,10 +4,10 @@
   "plugins": {
     "SVPEQ4Beta": {
       "name": "Secret Future EQ 2 Beta",
-      "version": "2.6.2",
-      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-sfe2-2.6.2/Secret-Future-EQ-2-Beta-2.6.2.pkg",
+      "version": "2.6.4",
+      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-sfe2-2.6.4/Secret-Future-EQ-2-Beta-2.6.4.pkg",
       "critical": false,
-      "notes": "Fixes typing in the bug / wish window and clicks that went through to a plugin behind it. Update notice now shows on open. Install, then restart your DAW."
+      "notes": "Fixes typing in every text field of the plugin window (email, license, bug / wish): it now works like the license key field. Install, then restart your DAW."
     }
   }
 }
