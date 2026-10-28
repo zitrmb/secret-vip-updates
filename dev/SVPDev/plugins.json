@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "channel": "dev-test",
+  "release_ready": false,
+  "plugins": {
+    "SVPDev": {
+      "version": "1.0.0",
+      "url": "https://plugins.secret.vip/files/dev/SVPDev/162e7518885b8f1117c619a23855f990d71ea09c9f09b9017bcb90a2d1011d53/",
+      "sha256": "162e7518885b8f1117c619a23855f990d71ea09c9f09b9017bcb90a2d1011d53"
+    }
+  }
+}
