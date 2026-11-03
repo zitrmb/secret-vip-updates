@@ -28,6 +28,13 @@
       "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-secret-analyser-1.3.1/Secret-Analyser-Beta-1.3.1.pkg",
       "critical": false,
       "notes": "Fixes typing in the bug / wish window and clicks that went through to a plugin behind it. Update notice now shows on open. Install, then restart your DAW."
+    },
+    "SecretDynamicsRelease": {
+      "name": "Secret Dynamics",
+      "version": "1.0.0",
+      "url": "https://plugins.secret.vip/plugins/dynamics/",
+      "critical": false,
+      "notes": "First release. More punch. A steady level. Keep the life in your music."
     }
   }
 }
