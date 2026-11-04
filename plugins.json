@@ -31,11 +31,11 @@
     },
     "SecretDynamicsRelease": {
       "name": "Secret Dynamics",
-      "version": null,
-      "url": null,
-      "sha256": null,
+      "version": "1.0.1",
+      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/secret-dynamics-1.0.1/Secret-Dynamics-1.0.1-Mac.pkg",
+      "sha256": "d09681a9a16ce78ed6123b5bc4808fb2f27a50d11b0f20ebf7f05ee3374dad9d",
       "critical": false,
-      "notes": "Private draft; candidate pending."
+      "notes": "Secret Dynamics release candidate. Install, then restart your DAW."
     }
   }
 }
