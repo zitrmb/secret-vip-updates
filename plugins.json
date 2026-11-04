@@ -31,10 +31,11 @@
     },
     "SecretDynamicsRelease": {
       "name": "Secret Dynamics",
-      "version": "1.0.0",
-      "url": "https://plugins.secret.vip/plugins/dynamics/",
+      "version": null,
+      "url": null,
+      "sha256": null,
       "critical": false,
-      "notes": "First release. More punch. A steady level. Keep the life in your music."
+      "notes": "Private draft; candidate pending."
     }
   }
 }
