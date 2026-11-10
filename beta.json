@@ -4,10 +4,10 @@
   "plugins": {
     "SVPEQ4Beta": {
       "name": "Secret Future EQ 2 Beta",
-      "version": "2.6.5",
-      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-sfe2-2.6.5/Secret-Future-EQ-2-Beta-2.6.5.pkg",
+      "version": "2.6.6",
+      "url": "https://github.com/zitrmb/secret-vip-updates/releases/download/beta-sfe2-2.6.6/Secret-Future-EQ-2-Beta-2.6.6.pkg",
       "critical": false,
-      "notes": "Fixed: a rare crash in Ableton Live 12 while dragging an EQ point. Install, then restart your DAW."
+      "notes": "New: an optional \"Match loudness\" choice in the Match settings, update notices in the plugin's language with a switch to turn update checks off, and \"Report a problem\" next to Bug / Wish. Your saved projects load unchanged. Install, then restart your DAW."
     }
   }
 }
