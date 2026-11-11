@@ -103,6 +103,17 @@ input[type=text][aria-invalid=true]{border-color:var(--bad)}
 .msg.info{border-left-color:var(--acc)}
 .msg p:last-child{margin:0}
 .msg .btn-2{margin-top:8px}
+/* Ablehnung durch Spotify: Hauptzeile, Schritte, Originaltext */
+.msg .why{font-weight:600;font-size:16px;margin:0 0 12px}
+.msg ol.howto{margin:0 0 4px}
+.msg ol.howto li{padding-bottom:8px}
+.msg .actions{margin:0 0 4px}
+.msg .actions .btn-2{margin-top:0}
+.said{border-top:1px solid var(--line);margin:12px 0 0;padding:12px 0 0;font-size:14px;color:var(--tx2)}
+.said p{margin:0 0 6px}
+.said .quote{font:400 13px/1.45 var(--mono);color:var(--tx);background:var(--raised);border:1px solid var(--line);border-radius:var(--r1);padding:10px 12px;margin:0 0 8px;overflow-wrap:anywhere;white-space:pre-wrap}
+.said .quote,.said .quote *{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;cursor:text}
+.said .btn-2{min-height:40px;padding:0 16px;font-size:14px;margin:0}
 .status:empty,.lists:empty{display:none}
 .status{font-size:14px;color:var(--tx2);min-height:21px;margin:12px 0 0;font-variant-numeric:tabular-nums}
 .bar{height:6px;border-radius:999px;background:var(--raised);overflow:hidden;border:1px solid var(--line)}
@@ -352,10 +363,10 @@ async function finishLogin(params) {
   }
   keepAuth(j, pending.c);
   try {
-    S.me = await api("GET", "/me");
+    S.me = await inStep("Konto lesen", () => api("GET", "/me"));
   } catch (e) {
     S.me = null;
-    if (e.kind === "forbidden") showForbidden(box);
+    if (e.kind === "forbidden") showForbidden(box, e);
     else showMsg(box, ["Die Verbindung steht, aber Spotify antwortet gerade nicht. Bitte gleich noch einmal verbinden."]);
   }
 }
@@ -372,7 +383,33 @@ async function refreshAuth() {
 }
 
 // ---------- Spotify-Aufrufe mit Pause bei 429 ----------
-class ApiError extends Error { constructor(kind, status) { super(kind + " " + status); this.kind = kind; this.status = status; } }
+class ApiError extends Error {
+  constructor(kind, status, said) { super(kind + " " + status); this.kind = kind; this.status = status; this.said = said || ""; this.step = ""; }
+}
+const SAID_MAX = 300;
+// Spotifys Begruendung aus der Antwort: Web-API-Form {"error":{"status","message","reason"}},
+// Anmelde-Form {"error","error_description"} oder reiner Text. Wird nur als Text angezeigt, nie als HTML.
+async function saidOf(r) {
+  let raw = "";
+  try { raw = await r.text(); } catch (e) { return ""; }
+  let out = raw;
+  try {
+    const j = JSON.parse(raw), er = j && j.error;
+    if (er && typeof er === "object") {
+      out = [typeof er.message === "string" ? er.message : "", typeof er.reason === "string" ? "(" + er.reason + ")" : ""].join(" ");
+    } else if (typeof er === "string") {
+      out = typeof j.error_description === "string" && j.error_description ? j.error_description : er;
+    } else if (j && typeof j.message === "string") {
+      out = j.message;
+    }
+  } catch (e) { /* kein JSON: Rohtext */ }
+  out = String(out).replace(/\s+/g, " ").trim();
+  return out.length > SAID_MAX ? out.slice(0, SAID_MAX - 1) + "…" : out;
+}
+// Merkt, bei welchem Schritt eine Ablehnung kam (der innerste Schritt gewinnt).
+async function inStep(step, fn) {
+  try { return await fn(); } catch (e) { if (e instanceof ApiError && !e.step) e.step = step; throw e; }
+}
 
 function setPause(sec) {
   const until = Date.now() + Math.max(1, sec) * 1000;
@@ -415,7 +452,7 @@ async function api(method, path, body) {
       if (!refreshed && (await refreshAuth())) { refreshed = true; continue; }
       throw new ApiError("auth", 401);
     }
-    if (r.status === 403) throw new ApiError("forbidden", 403);
+    if (r.status === 403) throw new ApiError("forbidden", 403, await saidOf(r));
     if (r.status >= 500 && attempt < 4) { await wait(1000 * 2 ** attempt); continue; }
     if (!r.ok) throw new ApiError("http", r.status);
     if (r.status === 204) return null;
@@ -522,7 +559,7 @@ async function run() {
   let stopped = null;
   try {
     setStatus("Lese deine Playlists …");
-    const own = await ownPlaylists();
+    const own = await inStep("Playlists lesen", ownPlaylists);
     for (let li = 0; li < lists.length; li++) {
       const l = lists[li], row = rows[li];
       row.line.textContent = "Suche Titel …";
@@ -533,7 +570,7 @@ async function run() {
         const worker = async () => {
           while (next < l.tracks.length) {
             const i = next++;
-            found[i] = await findTrack(l.tracks[i]);
+            found[i] = await inStep("Titel suchen", () => findTrack(l.tracks[i]));
             done++; doneAll++;
             setBar(row.bar, done, l.tracks.length);
             row.count.textContent = done + " / " + l.tracks.length;
@@ -551,13 +588,13 @@ async function run() {
         let pl = own.get(l.name), created = false;
         if (!pl) {
           row.line.textContent = "Lege Playlist an …";
-          pl = await api("POST", "/me/playlists", {
+          pl = await inStep("Playlist anlegen", () => api("POST", "/me/playlists", {
             name: l.name, public: false, description: "Referenzliste zum Hören und Messen, Stand " + today(),
-          });
+          }));
           own.set(l.name, pl); created = true;
         }
         row.line.textContent = "Schreibe Titel …";
-        await replaceItems(pl.id, uris);
+        await inStep("Titel schreiben", () => replaceItems(pl.id, uris));
         const ok = l.tracks.length - missing.length;
         row.bar.classList.add("ok"); setBar(row.bar, 1, 1);
         row.count.textContent = ok + " von " + l.tracks.length + " gefunden";
@@ -598,7 +635,7 @@ async function run() {
     $("reconnect3").addEventListener("click", connect);
   } else if (stopped.kind === "forbidden") {
     setStatus("");
-    showForbidden(box);
+    showForbidden(box, stopped);
   } else {
     setStatus("");
     showMsg(box, ["Spotify antwortet gerade nicht. Bitte in ein paar Minuten noch einmal „Anlegen“ tippen."]);
@@ -606,12 +643,65 @@ async function run() {
   updateUI();
 }
 
-function showForbidden(box) {
-  showMsg(box, [
-    "Spotify lässt deine App noch nicht zu.",
-    "Meist fehlt eins von zwei Dingen: Das Konto, mit dem die App angelegt wurde, braucht Spotify Premium. Und wer sich verbindet, muss in der App unter „User Management“ eingetragen sein.",
-    "Danach hier neu verbinden.",
-  ]);
+// ---------- Ablehnung durch Spotify (403): Grund, Schritte, Originaltext ----------
+// Zuordnung nach Spotifys Antworttext; Herkunft jedes Musters steht in ergebnis.md (Doku-Stellen).
+// Passt keins, gilt "unknown": dann nur Originaltext plus beide Pruefungen. Reihenfolge = Vorrang.
+const DASHBOARD = "https://developer.spotify.com/dashboard";
+const REASONS = [
+  { key: "premium", test: /premium/i },
+  { key: "user", test: /\bnot\b[^.]{0,20}\bregistered\b|allow-?list|users? management/i },
+  { key: "scope", test: /\bscopes?\b/i },
+];
+function reasonOf(said) {
+  const hit = REASONS.find((r) => r.test.test(said || ""));
+  return hit ? hit.key : "unknown";
+}
+function dashLink() {
+  return el("a", { href: DASHBOARD, target: "_blank", rel: "noopener noreferrer" }, "Spotify-Dashboard");
+}
+const AGAIN = "Hier „Neu verbinden“ tippen, danach noch einmal „Anlegen“.";
+function forbiddenText(reason) {
+  const who = S.me ? " (verbunden als „" + (S.me.display_name || S.me.id) + "“)" : "";
+  if (reason === "premium") return {
+    why: "Das Konto, dem deine Spotify-App gehört, hat gerade kein Premium.",
+    steps: [["Im ", dashLink(), " nachsehen, mit welchem Konto die App angelegt ist."],
+            ["Bei genau diesem Konto Spotify Premium aktivieren."], [AGAIN]] };
+  if (reason === "user") return {
+    why: "Dein Spotify-Konto ist für diese App noch nicht freigeschaltet.",
+    steps: [["Im ", dashLink(), " deine App öffnen, dann „Settings“ und „User Management“."],
+            ["Name und E-Mail deines Spotify-Kontos" + who + " eintragen und speichern."], [AGAIN]] };
+  if (reason === "scope") return {
+    why: "Spotify fehlt noch deine Erlaubnis für diese Seite.",
+    steps: [["„Neu verbinden“ tippen."], ["Bei Spotify allem zustimmen."], ["Danach noch einmal „Anlegen“ tippen."]] };
+  return {
+    why: "Spotify lässt das gerade nicht zu.",
+    steps: [["Im ", dashLink(), " prüfen: Das Konto, dem die App gehört, hat Premium."],
+            ["Dort unter „User Management“ prüfen: Dein Spotify-Konto ist eingetragen."], [AGAIN]] };
+}
+function showForbidden(box, err) {
+  const said = (err && err.said) || "", step = (err && err.step) || "";
+  const reason = reasonOf(said), t = forbiddenText(reason);
+  const again = el("button", { type: "button", class: "btn-2", "data-act": "reconnect" }, "Neu verbinden");
+  again.addEventListener("click", connect);
+  const quote = el("div", { class: "quote", text: said || "Kein Text, nur „abgelehnt“ (403)." });
+  const copyLine = "Spotify" + (step ? ", Schritt „" + step + "“" : "") + ", Status 403: " + (said || "ohne Text");
+  const copyBtn = el("button", { type: "button", class: "btn-2", "data-act": "copy" }, icon("copy"), el("span", { text: "Kopieren" }));
+  copyBtn.addEventListener("click", async () => {
+    const ok = await copyText(copyLine), label = copyBtn.querySelector("span");
+    label.textContent = ok ? "Kopiert" : "Bitte markieren";
+    copyBtn.replaceChild(icon(ok ? "check" : "copy"), copyBtn.querySelector("svg"));
+    setTimeout(() => { label.textContent = "Kopieren"; copyBtn.replaceChild(icon("copy"), copyBtn.querySelector("svg")); }, 2000);
+  });
+  box.replaceChildren(
+    el("p", { class: "why", text: t.why }),
+    el("ol", { class: "howto" }, ...t.steps.map((parts) => el("li", {}, ...parts))),
+    el("div", { class: "actions" }, again),
+    el("div", { class: "said" },
+      el("p", { text: "Spotify sagt" + (step ? " beim Schritt „" + step + "“" : "") + ":" }),
+      quote, copyBtn));
+  box.dataset.reason = reason;
+  box.dataset.step = step;
+  box.hidden = false;
 }
 
 // ---------- Oberflaeche ----------
@@ -638,15 +728,19 @@ function updateUI() {
   $("cid").disabled = S.running;
 }
 
-async function copyAddress() {
-  const btn = $("copy"), label = btn.querySelector("span");
-  let ok = false;
-  try { await navigator.clipboard.writeText(REDIRECT_URI); ok = true; } catch (e) {
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
     const ta = el("textarea", { readonly: "", style: "position:fixed;opacity:0" });
-    ta.value = REDIRECT_URI; document.body.append(ta); ta.select();
+    ta.value = text; document.body.append(ta); ta.select();
+    let ok = false;
     try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
     ta.remove();
+    return ok;
   }
+}
+async function copyAddress() {
+  const btn = $("copy"), label = btn.querySelector("span");
+  const ok = await copyText(REDIRECT_URI);
   label.textContent = ok ? "Kopiert" : "Bitte abtippen";
   btn.replaceChild(icon(ok ? "check" : "copy"), btn.querySelector("svg"));
   setTimeout(() => { label.textContent = "Adresse kopieren"; btn.replaceChild(icon("copy"), btn.querySelector("svg")); }, 2000);
