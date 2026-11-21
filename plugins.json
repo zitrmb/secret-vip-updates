@@ -35,6 +35,14 @@
       "url": "https://secret-audio.com/plugins/dynamics/",
       "critical": false,
       "notes": "Bring your sound forward with more punch, warmth and presence. Shape the feel of your track and keep your own sound."
+    },
+    "SecretAnalyser": {
+      "name": "Secret Analyser",
+      "version": "1.0.3",
+      "url": "https://secret-audio.com/plugins/analyser/",
+      "critical": false,
+      "notes": "Frequency numbers now sit below the display, unnamed tracks are numbered, clearer buttons at the top, full Look menu names and new interface colours in grey, black, white and orange.",
+      "notes_de": "Frequenzzahlen stehen jetzt unter dem Messbild, Spuren ohne Namen werden nummeriert, klarere Knöpfe oben, volle Namen im Look-Menü und neue Oberflächenfarben in Grau, Schwarz, Weiß und Orange."
     }
   }
 }
