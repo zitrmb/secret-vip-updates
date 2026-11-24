@@ -25,11 +25,11 @@
     },
     "SecretFutureEQ4": {
       "name": "Secret Future EQ 4",
-      "version": "4.0.0",
+      "version": "4.0.1",
       "url": "https://secret-audio.com/plugins/future-eq-4/",
-      "critical": false,
-      "notes": "First release of Secret Future EQ 4: Dynamic Match, any reference you like and your own bands. Install, then restart your DAW.",
-      "notes_de": "Erste Version von Secret Future EQ 4: dynamischer Abgleich, jede Referenz, die du magst, und eigene Bänder. Installieren, dann die DAW neu starten."
+      "critical": true,
+      "notes": "Improved stability when opening the window, plus a cleaner view. Install, then restart your DAW.",
+      "notes_de": "Stabilität beim Öffnen des Fensters verbessert, dazu eine aufgeräumtere Ansicht. Installieren, dann die DAW neu starten."
     },
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
