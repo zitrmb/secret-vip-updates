@@ -10,10 +10,10 @@
     },
     "SecretDynamicsRelease": {
       "name": "Secret Dynamics",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "url": "https://secret-audio.com/plugins/dynamics/",
       "critical": false,
-      "notes": "A new final touch adds loudness and keeps your punch. Hold keeps loudness steady, and Learn sets it from your track. Cleaner layout with a bigger tempo field, and the level no longer jumps when a loop restarts. Install, then restart your DAW."
+      "notes": "On Mac, switches such as Auto now react to the first click. Includes everything from 3.0.1: a new final touch for loudness and punch, plus Hold and Learn. Install, then restart your DAW."
     },
     "SecretAnalyser": {
       "name": "Secret Analyser",
