@@ -25,11 +25,11 @@
     },
     "SecretFutureEQ4": {
       "name": "Secret Future EQ 4",
-      "version": "4.0.2",
+      "version": "4.0.3",
       "url": "https://secret-audio.com/plugins/future-eq-4/",
       "critical": false,
-      "notes": "More room for the graph and a calmer look. Includes the stability fix from 4.0.1. Install, then restart your DAW.",
-      "notes_de": "Mehr Platz für den Graph und ein ruhigeres Bild. Die Stabilitäts-Verbesserung aus 4.0.1 ist enthalten. Installieren, dann die DAW neu starten."
+      "notes": "Capture now shows the running time and a Stop button. Includes everything from 4.0.1 and 4.0.2. Install, then restart your DAW.",
+      "notes_de": "Die Aufnahme zeigt jetzt die laufende Zeit und einen Stopp-Knopf. Alles aus 4.0.1 und 4.0.2 ist enthalten. Installieren, dann die DAW neu starten."
     },
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
