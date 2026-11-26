@@ -25,11 +25,11 @@
     },
     "SecretFutureEQ4": {
       "name": "Secret Future EQ 4",
-      "version": "4.0.1",
+      "version": "4.0.2",
       "url": "https://secret-audio.com/plugins/future-eq-4/",
-      "critical": true,
-      "notes": "Improved stability when opening the window, plus a cleaner view. Install, then restart your DAW.",
-      "notes_de": "Stabilität beim Öffnen des Fensters verbessert, dazu eine aufgeräumtere Ansicht. Installieren, dann die DAW neu starten."
+      "critical": false,
+      "notes": "More room for the graph and a calmer look. Includes the stability fix from 4.0.1. Install, then restart your DAW.",
+      "notes_de": "Mehr Platz für den Graph und ein ruhigeres Bild. Die Stabilitäts-Verbesserung aus 4.0.1 ist enthalten. Installieren, dann die DAW neu starten."
     },
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
