@@ -25,11 +25,11 @@
     },
     "SecretFutureEQ4": {
       "name": "Secret Future EQ 4",
-      "version": "4.0.3",
+      "version": "4.0.4",
       "url": "https://secret-audio.com/plugins/future-eq-4/",
       "critical": false,
-      "notes": "Capture now shows the running time and a Stop button. Includes everything from 4.0.1 and 4.0.2. Install, then restart your DAW.",
-      "notes_de": "Die Aufnahme zeigt jetzt die laufende Zeit und einen Stopp-Knopf. Alles aus 4.0.1 und 4.0.2 ist enthalten. Installieren, dann die DAW neu starten."
+      "notes": "New: a free 14-day trial, no account needed. Includes everything from 4.0.1 to 4.0.3. Install, then restart your DAW.",
+      "notes_de": "Neu: 14 Tage kostenlos testen, ohne Konto. Alles aus 4.0.1 bis 4.0.3 ist enthalten. Installieren, dann die DAW neu starten."
     },
     "SVPEQ4": {
       "name": "Secret Future EQ 2",
